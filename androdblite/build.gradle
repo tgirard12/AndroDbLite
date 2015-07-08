@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 22
+
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+
+    testCompile 'com.github.tony19:logback-android-core:1.1.1-4'
+    testCompile 'com.github.tony19:logback-android-classic:1.1.1-4'
+    testCompile 'org.slf4j:slf4j-api:1.7.6'
+
+    provided 'com.github.tony19:logback-android-core:1.1.1-4'
+    provided 'com.github.tony19:logback-android-classic:1.1.1-4'
+    provided 'org.slf4j:slf4j-api:1.7.6'
+}
