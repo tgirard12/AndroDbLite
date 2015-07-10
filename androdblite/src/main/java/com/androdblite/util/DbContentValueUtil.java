@@ -19,7 +19,7 @@ public class DbContentValueUtil {
         String name;
         for (Field f : fieldList) {
             final DbColumn column = f.getAnnotation(DbColumn.class);
-            if (column != null && !column.insertUpdate()) {
+            if (column != null && column.insertUpdate()) {
 
                 // Check use other Name
                 name = DbReflexionUtil.getColumnName(f, column);

@@ -24,7 +24,7 @@ public class DbCursorUtil {
      * @param <T>       t
      * @return r
      */
-    public <T> List<T> getEntitiesFromCursor(Class<T> clazz, List<Field> fieldList, Cursor cursor) {
+    public static <T> List<T> getEntitiesFromCursor(Class<T> clazz, List<Field> fieldList, Cursor cursor) {
 
         List<T> listResult = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -36,7 +36,7 @@ public class DbCursorUtil {
         return listResult;
     }
 
-    public <T> T getEntityFromCursor(Class<T> clazz, List<Field> fieldList, Cursor cursor) {
+    public static <T> T getEntityFromCursor(Class<T> clazz, List<Field> fieldList, Cursor cursor) {
 
         T entity = null;
         try {

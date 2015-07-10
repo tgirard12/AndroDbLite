@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.androdblite.AndroDbLite;
 import com.androdblite.AndroDbLiteError;
 import com.androdblite.annotation.DbColumn;
-import com.androdblite.annotation.DbEntity;
+import com.androdblite.annotation.DbTable;
 
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +25,10 @@ public class DbReflexionUtil {
     static org.slf4j.Logger logger = LoggerFactory.getLogger(AndroDbLite.TAG);
 
     public static List<Field> getFields(Class<?> clazz) {
+        final DbTable dbTable = (DbTable) clazz.getAnnotation(DbTable.class);
+        if (dbTable == null)
+            throw new AndroDbLiteError("Class {} must be annotate with @DbEntity");
+
         final ArrayList<Field> fields = new ArrayList<>();
         addDeclaredAndInheritedFields(clazz, fields);
 
@@ -45,15 +49,31 @@ public class DbReflexionUtil {
         }
     }
 
+
+    public static <T> String[] getColumnsSelect(Class<T> clazz, List<Field> fields) {
+
+        final ArrayList<String> columns = new ArrayList<>(fields.size());
+        for (Field field : fields) {
+            final DbColumn column = field.getAnnotation(DbColumn.class);
+            if (column != null && column.select()) {
+
+                // Check use other Name
+                final String name = DbReflexionUtil.getColumnName(field, column);
+                columns.add(name);
+            }
+        }
+        return columns.toArray(new String[columns.size()]);
+    }
+
     public static String getTableName(Class clazz) {
-        final DbEntity dbEntity = (DbEntity) clazz.getAnnotation(DbEntity.class);
-        if (dbEntity == null)
+        final DbTable dbTable = (DbTable) clazz.getAnnotation(DbTable.class);
+        if (dbTable == null)
             throw new AndroDbLiteError("Class {} must be annotate with @DbEntity");
 
-        if (TextUtils.isEmpty(dbEntity.name()))
+        if (TextUtils.isEmpty(dbTable.name()))
             return clazz.getName();
         else
-            return dbEntity.name();
+            return dbTable.name();
     }
 
     public static String getColumnName(Field f, DbColumn column) {

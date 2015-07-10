@@ -1,14 +1,14 @@
 package com.androdblite.domain;
 
 import com.androdblite.annotation.DbColumn;
-import com.androdblite.annotation.DbEntity;
+import com.androdblite.annotation.DbTable;
 
 import java.util.Date;
 
 /**
  * Created by tgirard on 30/06/15
  */
-@DbEntity(name = "myCustomTable")
+@DbTable(name = "myCustomTable")
 public class EntityTest {
 
     @DbColumn(name = "myIntValue")
@@ -35,6 +35,9 @@ public class EntityTest {
     public boolean booleanValue;
     @DbColumn(name = "myBooleanNullableValue")
     public Boolean booleanNullableValue;
+
+    @DbColumn(name = "myDate")
+    public Date date;
 
     @DbColumn(name = "myDateNullable")
     public Date dateNullable;

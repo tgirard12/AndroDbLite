@@ -12,6 +12,7 @@ public class DbClassCache {
 
     static Map<Class<?>, List<Field>> classes = new HashMap<>();
     static Map<Class<?>, String> tables = new HashMap<>();
+    static Map<Class<?>, String[]> columnsSelect = new HashMap<>();
 
     public static List<Field> getFields(Class<?> clazz) {
         if (!classes.containsKey(clazz)) {
@@ -42,6 +43,11 @@ public class DbClassCache {
     }
 
     public static <T> String[] getColumnsSelect(Class<T> clazz) {
-        return new String[0];
+        if (!columnsSelect.containsKey(clazz)) {
+            final String[] columns = DbReflexionUtil.getColumnsSelect(clazz, getFields(clazz));
+            columnsSelect.put(clazz, columns);
+            return columns;
+        }
+        return columnsSelect.get(clazz);
     }
 }

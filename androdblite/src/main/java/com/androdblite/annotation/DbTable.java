@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface DbEntity {
+public @interface DbTable {
 
     String name() default "";
 }

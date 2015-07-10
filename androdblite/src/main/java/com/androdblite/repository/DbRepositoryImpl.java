@@ -3,6 +3,7 @@ package com.androdblite.repository;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -12,7 +13,9 @@ import com.androdblite.domain.DbEntity;
 import com.androdblite.domain.DbEntityServer;
 import com.androdblite.util.DbClassCache;
 import com.androdblite.util.DbContentValueUtil;
+import com.androdblite.util.DbCursorUtil;
 import com.androdblite.util.DbManifestUtil;
+import com.androdblite.util.DbReflexionUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ public class DbRepositoryImpl implements DbRepository {
     /**
      * Init a defaut SqliOpenHelper => DbHelper
      *
-     * @param context
+     * @param context c
      * @throws AndroDbLiteException
      */
     public DbRepositoryImpl(Context context) throws AndroDbLiteException {
@@ -92,61 +95,71 @@ public class DbRepositoryImpl implements DbRepository {
 
     @Override
     public <T> List<T> find(Class<T> clazz, String selection, String[] selectionArgs, String orderBy, String limit, String groupBy) {
-        final String table = DbClassCache.getTableName(clazz.getClass());
+        final String table = DbClassCache.getTableName(clazz);
         final String[] columns = DbClassCache.getColumnsSelect(clazz);
         final List<Field> fieldList = DbClassCache.getFields(clazz);
 
         Cursor c = null;
-        List<T> listResult = new ArrayList<T>();
+        List<T> listResult = new ArrayList<>();
         try {
             c = getReadableDatabase().query(table, columns, selection, selectionArgs, groupBy, null, orderBy, limit);
-
+            return DbCursorUtil.getEntitiesFromCursor(clazz, fieldList, c);
 
         } finally {
             if (c != null)
                 c.close();
         }
-        return listResult;
     }
 
     @Override
     public Cursor findCursor(Class clazz, String selection, String[] selectionArgs) {
-        return null;
+        return findCursor(clazz, selection, selectionArgs, null, null, null);
     }
 
     @Override
     public Cursor findCursor(Class clazz, String selection, String[] selectionArgs, String orderBy) {
-        return null;
+        return findCursor(clazz, selection, selectionArgs, orderBy, null, null);
     }
 
     @Override
     public Cursor findCursor(Class clazz, String selection, String[] selectionArgs, String orderBy, String limit) {
-        return null;
+        return findCursor(clazz, selection, selectionArgs, orderBy, limit, null);
     }
 
     @Override
     public Cursor findCursor(Class clazz, String selection, String[] selectionArgs, String orderBy, String limit, String groupBy) {
-        return null;
+        final String table = DbClassCache.getTableName(clazz);
+        final String[] columns = DbClassCache.getColumnsSelect(clazz);
+
+        return getReadableDatabase().query(table, columns, selection, selectionArgs, groupBy, null, orderBy, limit);
     }
 
     @Override
     public long count(Class clazz) {
-        return 0;
+        final String table = DbReflexionUtil.getTableName(clazz);
+        return DatabaseUtils.longForQuery(getReadableDatabase(), "select count(*) from " + table, null);
     }
 
     @Override
     public long count(Class clazz, String selection, String[] selectionArgs) {
-        return 0;
+        final String table = DbReflexionUtil.getTableName(clazz);
+        return DatabaseUtils.longForQuery(
+                getReadableDatabase(),
+                "select count(*) from " + table + " where " + selection,
+                selectionArgs);
     }
 
     @Override
-    public long first(Class clazz) {
-        return 0;
+    public <T> T first(Class<T> clazz) {
+        return first(clazz, null, null);
     }
 
     @Override
-    public long first(Class clazz, String selection, String[] selectionArgs) {
-        return 0;
+    public <T> T first(Class<T> clazz, String selection, String[] selectionArgs) {
+        final List<T> all = find(clazz, selection, selectionArgs, null, "1", null);
+        if (all.size() == 1)
+            return all.get(1);
+        return null;
     }
 
     @Override

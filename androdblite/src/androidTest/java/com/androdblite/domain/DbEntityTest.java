@@ -1,8 +1,10 @@
 package com.androdblite.domain;
 
+import com.androdblite.annotation.DbTable;
+
 /**
  * Created by tgirard on 30/06/15
  */
-@com.androdblite.annotation.DbEntity
+@DbTable
 public class DbEntityTest extends DbEntity {
 }

@@ -51,9 +51,9 @@ public interface DbRepository {
 
     //
 
-    long first(Class clazz);
+    <T> T first(Class<T> clazz);
 
-    long first(Class clazz, String selection, String[] selectionArgs);
+    <T> T first(Class<T> clazz, String selection, String[] selectionArgs);
 
     //
 
