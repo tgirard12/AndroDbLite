@@ -22,8 +22,8 @@ public abstract class DbEntity {
     public boolean isDelete = false;
 
     @DbColumn(name = DB.dateCreate)
-    private Date dateCreate;
+    public Date dateCreate;
 
     @DbColumn(name = DB.dateModification)
-    private Date dateModification;
+    public Date dateModification;
 }

@@ -19,6 +19,30 @@ public interface DbRepository {
 
     SQLiteDatabase getWritableDatabase();
 
+    // Count
+
+    long count(Class clazz);
+
+    long count(Class clazz, String selection, String[] selectionArgs);
+
+    // Delete
+
+    int delete(Class clazz, SQLiteDatabase database, String selection, String[] selectionArgs);
+
+    int delete(Class clazz, String selection, String[] selectionArgs);
+
+    void deleteById(DbEntity entity);
+
+    void deleteByIdServer(DbEntityServer entity);
+
+    void deleteById(List<? extends DbEntity> entities);
+
+    void deleteByIdServer(List<? extends DbEntityServer> entities);
+
+    void deleteByIdInTx(List<? extends DbEntity> entities);
+
+    void deleteByIdServerInTx(List<? extends DbEntityServer> entities);
+
     // Find
 
     <T> List<T> findAll(Class<T> clazz);
@@ -43,12 +67,6 @@ public interface DbRepository {
 
     Cursor findCursor(Class clazz, String selection, String[] selectionArgs, String orderBy, String limit, String groupBy);
 
-    // Count
-
-    long count(Class clazz);
-
-    long count(Class clazz, String selection, String[] selectionArgs);
-
     //
 
     <T> T first(Class<T> clazz);
@@ -61,40 +79,42 @@ public interface DbRepository {
 
     long insert(Object entity);
 
-    List<Long> insert(List<Object> entity);
+    void insert(DbEntity entity);
 
-    List<Long> insertInTx(List<Object> entity);
+    void insert(List<? extends DbEntity> entities);
+
+    void insertInTx(List<? extends DbEntity> entities);
 
     //
 
-    DbEntity saveById(DbEntity entity);
+    long update(Object entity, SQLiteDatabase database, String selection, String[] selectionArgs);
 
-    DbEntity saveByIdServer(DbEntityServer entity);
+    long update(Object entity, String selection, String[] selectionArgs);
 
-    DbEntity save(Object entity, String selection, String[] selectionArgs);
+    void updateById(DbEntity entity);
 
-    List<DbEntity> saveById(List<DbEntity> entity);
+    void updateByIdServer(DbEntityServer entity);
 
-    List<DbEntity> saveByIdServer(List<DbEntityServer> entity);
+    void updateById(List<? extends DbEntity> entities);
 
-    List<DbEntity> saveByIdInTx(List<DbEntity> entity);
+    void updateByIdServer(List<? extends DbEntityServer> entities);
 
-    List<DbEntity> saveByIdServerInTx(List<DbEntityServer> entity);
+    void updateByIdInTx(List<? extends DbEntity> entities);
 
-    // Delete
+    void updateByIdServerInTx(List<? extends DbEntityServer> entities);
 
-    void deleteById(DbEntity entity);
+    //
 
-    void deleteByIdServer(DbEntityServer entity);
-
-    void delete(Object entity, String selection, String[] selectionArgs);
-
-    void deleteById(List<DbEntity> entity);
-
-    void deleteByIdServer(List<DbEntityServer> entity);
-
-    void deleteByIdInTx(List<DbEntity> entity);
-
-    void deleteByIdServerInTx(List<DbEntityServer> entity);
+//    DbEntity saveById(DbEntity entity);
+//
+//    DbEntity saveByIdServer(DbEntityServer entity);
+//
+//    List<DbEntity> saveById(List<? extends DbEntity> entity);
+//
+//    List<DbEntity> saveByIdServer(List<? extends DbEntityServer> entity);
+//
+//    List<DbEntity> saveByIdInTx(List<? extends DbEntity> entity);
+//
+//    List<DbEntity> saveByIdServerInTx(List<? extends DbEntityServer> entity);
 
 }

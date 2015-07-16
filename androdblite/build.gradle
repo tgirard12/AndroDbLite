@@ -1,4 +1,9 @@
+
 apply plugin: 'com.android.library'
+
+group = "com.androdblite"
+version "0.1.0"
+def versionCodeInt = 100
 
 android {
     compileSdkVersion 22
@@ -8,8 +13,10 @@ android {
         minSdkVersion 9
         targetSdkVersion 22
 
-        versionCode 1
-        versionName "1.0"
+        versionCode versionCodeInt
+        versionName version
+    }
+    buildTypes {
     }
 }
 

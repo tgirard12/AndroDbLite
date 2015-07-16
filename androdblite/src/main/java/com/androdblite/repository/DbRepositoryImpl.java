@@ -28,6 +28,9 @@ public class DbRepositoryImpl implements DbRepository {
 
     public static SQLiteOpenHelper sqLiteOpenHelper;
 
+    public static String idSelection = DbEntity.DB.id + "=? ";
+    public static String idServerSelection = DbEntityServer.DB.idServer + "=? ";
+
     /**
      * Init a defaut SqliOpenHelper => DbHelper
      *
@@ -54,6 +57,90 @@ public class DbRepositoryImpl implements DbRepository {
     @Override
     public SQLiteDatabase getWritableDatabase() {
         return sqLiteOpenHelper.getWritableDatabase();
+    }
+
+    @Override
+    public long count(Class clazz) {
+        final String table = DbReflexionUtil.getTableName(clazz);
+        return DatabaseUtils.longForQuery(getReadableDatabase(), "select count(*) from " + table, null);
+    }
+
+    @Override
+    public long count(Class clazz, String selection, String[] selectionArgs) {
+        final String table = DbReflexionUtil.getTableName(clazz);
+        return DatabaseUtils.longForQuery(
+                getReadableDatabase(),
+                "select count(*) from " + table + " where " + selection,
+                selectionArgs);
+    }
+
+    @Override
+    public int delete(Class clazz, SQLiteDatabase database, String selection, String[] selectionArgs) {
+        final String table = DbReflexionUtil.getTableName(clazz);
+        return database.delete(table, selection, selectionArgs);
+    }
+
+    @Override
+    public int delete(Class clazz, String selection, String[] selectionArgs) {
+        return delete(clazz, getWritableDatabase(), selection, selectionArgs);
+    }
+
+    @Override
+    public void deleteById(DbEntity entity) {
+        delete(entity.getClass(), idSelection, new String[]{String.valueOf(entity._id)});
+    }
+
+    @Override
+    public void deleteByIdServer(DbEntityServer entity) {
+        delete(entity.getClass(), idServerSelection, new String[]{entity.idServer});
+    }
+
+    @Override
+    public void deleteById(List<? extends DbEntity> entities) {
+        for (DbEntity dbEntity : entities) {
+            deleteById(dbEntity);
+        }
+    }
+
+    @Override
+    public void deleteByIdServer(List<? extends DbEntityServer> entities) {
+        for (DbEntityServer dbEntityServer : entities) {
+            deleteById(dbEntityServer);
+        }
+    }
+
+    @Override
+    public void deleteByIdInTx(List<? extends DbEntity> entities) {
+        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        try {
+            writableDatabase.beginTransaction();
+            for (DbEntity dbEntity : entities) {
+                delete(dbEntity.getClass(),
+                        writableDatabase,
+                        idSelection,
+                        new String[]{String.valueOf(dbEntity._id)});
+            }
+            writableDatabase.setTransactionSuccessful();
+        } finally {
+            writableDatabase.endTransaction();
+        }
+    }
+
+    @Override
+    public void deleteByIdServerInTx(List<? extends DbEntityServer> entities) {
+        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        try {
+            writableDatabase.beginTransaction();
+            for (DbEntityServer dbEntityServer : entities) {
+                delete(dbEntityServer.getClass(),
+                        writableDatabase,
+                        idServerSelection,
+                        new String[]{String.valueOf(dbEntityServer.idServer)});
+            }
+            writableDatabase.setTransactionSuccessful();
+        } finally {
+            writableDatabase.endTransaction();
+        }
     }
 
     @Override
@@ -135,21 +222,6 @@ public class DbRepositoryImpl implements DbRepository {
     }
 
     @Override
-    public long count(Class clazz) {
-        final String table = DbReflexionUtil.getTableName(clazz);
-        return DatabaseUtils.longForQuery(getReadableDatabase(), "select count(*) from " + table, null);
-    }
-
-    @Override
-    public long count(Class clazz, String selection, String[] selectionArgs) {
-        final String table = DbReflexionUtil.getTableName(clazz);
-        return DatabaseUtils.longForQuery(
-                getReadableDatabase(),
-                "select count(*) from " + table + " where " + selection,
-                selectionArgs);
-    }
-
-    @Override
     public <T> T first(Class<T> clazz) {
         return first(clazz, null, null);
     }
@@ -158,7 +230,7 @@ public class DbRepositoryImpl implements DbRepository {
     public <T> T first(Class<T> clazz, String selection, String[] selectionArgs) {
         final List<T> all = find(clazz, selection, selectionArgs, null, "1", null);
         if (all.size() == 1)
-            return all.get(1);
+            return all.get(0);
         return null;
     }
 
@@ -178,99 +250,130 @@ public class DbRepositoryImpl implements DbRepository {
     }
 
     @Override
-    public List<Long> insert(List<Object> entities) {
-
-        final ArrayList<Long> longs = new ArrayList<Long>(entities.size());
-        for (Object entity : entities) {
-            longs.add(insert(entity));
-        }
-        return longs;
+    public void insert(DbEntity entity) {
+        entity._id = insert(entity, getWritableDatabase());
     }
 
     @Override
-    public List<Long> insertInTx(List<Object> entities) {
+    public void insert(List<? extends DbEntity> entities) {
+
+        for (DbEntity dbEntity : entities) {
+            insert(dbEntity);
+        }
+    }
+
+    @Override
+    public void insertInTx(List<? extends DbEntity> entities) {
 
         final SQLiteDatabase writableDatabase = getWritableDatabase();
-        final ArrayList<Long> longs = new ArrayList<>(entities.size());
         try {
             writableDatabase.beginTransaction();
-            for (Object entity : entities) {
-                longs.add(insert(entity, writableDatabase));
+            for (DbEntity dbEntity : entities) {
+                dbEntity._id = insert(dbEntity, writableDatabase);
             }
             writableDatabase.setTransactionSuccessful();
         } finally {
             writableDatabase.endTransaction();
         }
-        return longs;
     }
 
     @Override
-    public DbEntity saveById(DbEntity entity) {
-        return null;
+    public long update(Object entity, SQLiteDatabase database, String selection, String[] selectionArgs) {
+
+        final String table = DbClassCache.getTableName(entity.getClass());
+        final List<Field> fieldList = DbClassCache.getFields(entity.getClass());
+        final ContentValues contentValues = DbContentValueUtil.getContentValues(fieldList, entity);
+
+        return database.update(table, contentValues, selection, selectionArgs);
     }
 
     @Override
-    public DbEntity saveByIdServer(DbEntityServer entity) {
-        return null;
+    public long update(Object entity, String selection, String[] selectionArgs) {
+        return update(entity, getWritableDatabase(), selection, selectionArgs);
     }
 
     @Override
-    public DbEntity save(Object entity, String selection, String[] selectionArgs) {
-        return null;
+    public void updateById(DbEntity entity) {
+        update(entity, getWritableDatabase(), idSelection, new String[]{String.valueOf(entity._id)});
     }
 
     @Override
-    public List<DbEntity> saveById(List<DbEntity> entity) {
-        return null;
+    public void updateByIdServer(DbEntityServer entity) {
+        update(entity, getWritableDatabase(), idServerSelection, new String[]{entity.idServer});
     }
 
     @Override
-    public List<DbEntity> saveByIdServer(List<DbEntityServer> entity) {
-        return null;
+    public void updateById(List<? extends DbEntity> entities) {
+        for (DbEntity dbEntity : entities) {
+            update(dbEntity, getWritableDatabase(), idSelection, new String[]{String.valueOf(dbEntity._id)});
+        }
     }
 
     @Override
-    public List<DbEntity> saveByIdInTx(List<DbEntity> entity) {
-        return null;
+    public void updateByIdServer(List<? extends DbEntityServer> entities) {
+        for (DbEntityServer dbEntity : entities) {
+            update(dbEntity, getWritableDatabase(), idServerSelection, new String[]{dbEntity.idServer});
+        }
     }
 
     @Override
-    public List<DbEntity> saveByIdServerInTx(List<DbEntityServer> entity) {
-        return null;
+    public void updateByIdInTx(List<? extends DbEntity> entities) {
+        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        try {
+            writableDatabase.beginTransaction();
+            for (DbEntity dbEntity : entities) {
+                update(dbEntity, getWritableDatabase(), idSelection, new String[]{String.valueOf(dbEntity._id)});
+            }
+            writableDatabase.setTransactionSuccessful();
+        } finally {
+            writableDatabase.endTransaction();
+        }
     }
 
     @Override
-    public void deleteById(DbEntity entity) {
-
+    public void updateByIdServerInTx(List<? extends DbEntityServer> entities) {
+        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        try {
+            writableDatabase.beginTransaction();
+            for (DbEntityServer dbEntity : entities) {
+                update(dbEntity, getWritableDatabase(), idServerSelection, new String[]{String.valueOf(dbEntity.idServer)});
+            }
+            writableDatabase.setTransactionSuccessful();
+        } finally {
+            writableDatabase.endTransaction();
+        }
     }
 
-    @Override
-    public void deleteByIdServer(DbEntityServer entity) {
+//    @Override
+//    public DbEntity saveById(DbEntity entity) {
+//        return null;
+//    }
+//
+//    @Override
+//    public DbEntity saveByIdServer(DbEntityServer entity) {
+//        return null;
+//    }
+//
+//
+//    @Override
+//    public List<DbEntity> saveById(List<? extends DbEntity> entity) {
+//        return null;
+//    }
+//
+//    @Override
+//    public List<DbEntity> saveByIdServer(List<? extends DbEntityServer> entity) {
+//        return null;
+//    }
+//
+//    @Override
+//    public List<DbEntity> saveByIdInTx(List<? extends DbEntity> entity) {
+//        return null;
+//    }
+//
+//    @Override
+//    public List<DbEntity> saveByIdServerInTx(List<? extends DbEntityServer> entity) {
+//        return null;
+//    }
 
-    }
 
-    @Override
-    public void delete(Object entity, String selection, String[] selectionArgs) {
-
-    }
-
-    @Override
-    public void deleteById(List<DbEntity> entity) {
-
-    }
-
-    @Override
-    public void deleteByIdServer(List<DbEntityServer> entity) {
-
-    }
-
-    @Override
-    public void deleteByIdInTx(List<DbEntity> entity) {
-
-    }
-
-    @Override
-    public void deleteByIdServerInTx(List<DbEntityServer> entity) {
-
-    }
 }

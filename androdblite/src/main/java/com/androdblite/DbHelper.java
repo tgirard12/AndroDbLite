@@ -75,6 +75,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 final String sqlToString = sql.toString();
                 logger.debug("execSQL() >", sqlToString);
                 db.execSQL(sqlToString);
+                sql = new StringBuilder(1000);
             }
         }
     }

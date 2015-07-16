@@ -71,7 +71,7 @@ public class DbReflexionUtil {
             throw new AndroDbLiteError("Class {} must be annotate with @DbEntity");
 
         if (TextUtils.isEmpty(dbTable.name()))
-            return clazz.getName();
+            return clazz.getSimpleName();
         else
             return dbTable.name();
     }

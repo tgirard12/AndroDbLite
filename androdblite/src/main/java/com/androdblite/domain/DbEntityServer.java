@@ -19,7 +19,7 @@ public abstract class DbEntityServer extends DbEntity {
     public String idServer;
 
     @DbColumn(name = DB.isSent)
-    public Long isSent;
+    public Boolean isSent;
 
     @DbColumn(name = DB.dateUtcSent)
     public Date dateUtcSent;
