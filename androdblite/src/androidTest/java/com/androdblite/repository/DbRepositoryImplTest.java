@@ -87,7 +87,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
 
         repository.deleteById(e1);
         assertEquals(1, repository.count(DbEntityTest.class));
-        assertEquals(2, repository.findAll(DbEntityTest.class).get(0)._id);
+        assertEquals(2, repository.findAll(DbEntityTest.class).get(0).getId());
     }
 
     public void testDeleteById_DbEntityServerTest() {
@@ -98,7 +98,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
 
         repository.deleteById(e1);
         assertEquals(1, repository.count(DbEntityServerTest.class));
-        assertEquals(2, repository.findAll(DbEntityServerTest.class).get(0)._id);
+        assertEquals(2, repository.findAll(DbEntityServerTest.class).get(0).getId());
     }
 
     public void testDeleteByIdServer_DbEntityServerTest() {
@@ -109,7 +109,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
 
         repository.deleteByIdServer(e1);
         assertEquals(1, repository.count(DbEntityServerTest.class));
-        assertEquals("213", repository.findAll(DbEntityServerTest.class).get(0).idServer);
+        assertEquals("213", repository.findAll(DbEntityServerTest.class).get(0).getIdServer());
     }
 
     public void testDeleteListById_DbEntityTest() {
@@ -122,7 +122,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
 
         repository.deleteById(Arrays.asList(e1, e2));
         assertEquals(1, repository.count(DbEntityTest.class));
-        assertEquals(3, repository.findAll(DbEntityTest.class).get(0)._id);
+        assertEquals(3, repository.findAll(DbEntityTest.class).get(0).getId());
     }
 
     public void testDeleteListById_DbEntityServerTest() {
@@ -135,7 +135,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
 
         repository.deleteById(Arrays.asList(e1, e2));
         assertEquals(1, repository.count(DbEntityServerTest.class));
-        assertEquals(3, repository.findAll(DbEntityServerTest.class).get(0)._id);
+        assertEquals(3, repository.findAll(DbEntityServerTest.class).get(0).getId());
     }
 
     public void testDeleteListByIdServer_DbEntityServerTest() {
@@ -148,7 +148,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
 
         repository.deleteByIdServer(Arrays.asList(e1, e3));
         assertEquals(1, repository.count(DbEntityServerTest.class));
-        assertEquals("213", repository.findAll(DbEntityServerTest.class).get(0).idServer);
+        assertEquals("213", repository.findAll(DbEntityServerTest.class).get(0).getIdServer());
     }
 
     public void testDeleteListByIdInTx_DbEntityTest() {
@@ -169,9 +169,9 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         }
 
         assertEquals(3, repository.count(DbEntityTest.class));
-        assertEquals(1, repository.findAll(DbEntityTest.class).get(0)._id);
-        assertEquals(2, repository.findAll(DbEntityTest.class).get(1)._id);
-        assertEquals(3, repository.findAll(DbEntityTest.class).get(2)._id);
+        assertEquals(1, repository.findAll(DbEntityTest.class).get(0).getId() );
+        assertEquals(2, repository.findAll(DbEntityTest.class).get(1).getId());
+        assertEquals(3, repository.findAll(DbEntityTest.class).get(2).getId());
     }
 
     public void testDeleteListByIdInTx_DbEntityServerTest() {
@@ -192,9 +192,9 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         }
 
         assertEquals(3, repository.count(DbEntityServerTest.class));
-        assertEquals(1, repository.findAll(DbEntityServerTest.class).get(0)._id);
-        assertEquals(2, repository.findAll(DbEntityServerTest.class).get(1)._id);
-        assertEquals(3, repository.findAll(DbEntityServerTest.class).get(2)._id);
+        assertEquals(1, repository.findAll(DbEntityServerTest.class).get(0).getId());
+        assertEquals(2, repository.findAll(DbEntityServerTest.class).get(1).getId());
+        assertEquals(3, repository.findAll(DbEntityServerTest.class).get(2).getId());
     }
 
     public void testDeleteListByIdServerInTx_DbEntityServerTest() {
@@ -215,9 +215,9 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         }
 
         assertEquals(3, repository.count(DbEntityServerTest.class));
-        assertEquals("113", repository.findAll(DbEntityServerTest.class).get(0).idServer);
-        assertEquals("213", repository.findAll(DbEntityServerTest.class).get(1).idServer);
-        assertEquals("313", repository.findAll(DbEntityServerTest.class).get(2).idServer);
+        assertEquals("113", repository.findAll(DbEntityServerTest.class).get(0).getIdServer());
+        assertEquals("213", repository.findAll(DbEntityServerTest.class).get(1).getIdServer());
+        assertEquals("313", repository.findAll(DbEntityServerTest.class).get(2).getIdServer());
     }
 
     public void testFindAll_EntityTest() {
@@ -475,10 +475,10 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         insert_4_DbEntityTest();
 
         DbEntityTest e2 = new DbEntityTest();
-        e2._id = 2;
+        e2.setId(2);
         e2.intValue = 2002;
         DbEntityTest e3 = new DbEntityTest();
-        e3._id = 3;
+        e3.setId(3);
         e3.intValue = 3002;
 
         repository.updateById(Arrays.asList(e2, e3));
@@ -493,10 +493,10 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         insert_4_DbEntityServerTest();
 
         DbEntityServerTest e2 = new DbEntityServerTest();
-        e2._id = 2;
+        e2.setId(2);
         e2.intValue = 2002;
         DbEntityServerTest e3 = new DbEntityServerTest();
-        e3._id = 3;
+        e3.setId(3);
         e3.intValue = 3002;
 
         repository.updateById(Arrays.asList(e2, e3));
@@ -511,10 +511,10 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         insert_4_DbEntityServerTest();
 
         DbEntityServerTest e2 = new DbEntityServerTest();
-        e2.idServer = "213";
+        e2.setIdServer("213");
         e2.intValue = 2002;
         DbEntityServerTest e3 = new DbEntityServerTest();
-        e3.idServer = "313";
+        e3.setIdServer("313");
         e3.intValue = 3002;
 
         repository.updateByIdServer(Arrays.asList(e2, e3));
@@ -529,7 +529,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         insert_4_DbEntityTest();
 
         DbEntityTest e2 = new DbEntityTest();
-        e2._id = 2;
+        e2.setId(2);
         e2.intValue = 2002;
 
         try {
@@ -548,7 +548,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         insert_4_DbEntityServerTest();
 
         DbEntityServerTest e2 = new DbEntityServerTest();
-        e2._id = 2;
+        e2.setId(2);
         e2.intValue = 2002;
 
         try {
@@ -567,7 +567,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         insert_4_DbEntityServerTest();
 
         DbEntityServerTest e2 = new DbEntityServerTest();
-        e2.idServer = "213";
+        e2.setIdServer("213");
         e2.intValue = 2002;
 
         try {
@@ -621,8 +621,8 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         assertEquals(null, en.stringNoSelect);
         assertEquals(null, en.stringTransient);
 
-        assertEquals(new Date(2015, 6, 25), en.dateCreate);
-        assertEquals(new Date(2015, 6, 30), en.dateModification);
+        assertEquals(new Date(2015, 6, 25), en.getDateCreate());
+        assertEquals(new Date(2015, 6, 30), en.getDateModification());
     }
 
     private void assertDbEntityServerTest(int base, DbEntityServerTest en) {
@@ -646,11 +646,11 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         assertEquals(null, en.stringTransient);
         ++base;
 
-        assertEquals(new Date(2015, 7, 20), en.dateCreate);
-        assertEquals(new Date(2015, 7, 25), en.dateModification);
-        assertEquals(String.valueOf(++base), en.idServer);
-        assertEquals(new Date(2015, 7, 30), en.dateUtcSent);
-        assertEquals(false, (boolean) en.isSent);
+        assertEquals(new Date(2015, 7, 20), en.getDateCreate());
+        assertEquals(new Date(2015, 7, 25), en.getDateModification());
+        assertEquals(String.valueOf(++base), en.getIdServer());
+        assertEquals(new Date(2015, 7, 30), en.getDateUtcSent());
+        assertEquals(false, (boolean) en.getIsSent());
     }
 
     private EntityTest createEntityFromBaseValue(int base) {
@@ -693,8 +693,8 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         e.stringNoSelect = String.valueOf(++base);
         e.stringTransient = String.valueOf(++base);
 
-        e.dateCreate = new Date(2015, 6, 25);
-        e.dateModification = new Date(2015, 6, 30);
+        e.setDateCreate(new Date(2015, 6, 25));
+        e.setDateModification(new Date(2015, 6, 30));
         return e;
     }
 
@@ -717,11 +717,11 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         e.stringNoSelect = String.valueOf(++base);
         e.stringTransient = String.valueOf(++base);
 
-        e.dateCreate = new Date(2015, 7, 20);
-        e.dateModification = new Date(2015, 7, 25);
-        e.idServer = String.valueOf(++base);
-        e.dateUtcSent = new Date(2015, 7, 30);
-        e.isSent = false;
+        e.setDateCreate(new Date(2015, 7, 20));
+        e.setDateModification(new Date(2015, 7, 25));
+        e.setIdServer(String.valueOf(++base));
+        e.setDateUtcSent(new Date(2015, 7, 30));
+        e.setIsSent(false);
         return e;
     }
 
@@ -743,46 +743,46 @@ public class DbRepositoryImplTest extends AndroidTestCase {
     private void insert_1_DbEntityTest() {
         final DbEntityTest e = createDbEntityTestFromBaseValue(100);
         repository.insert(e);
-        assertEquals(1, e._id);
+        assertEquals(1, e.getId());
     }
 
     private void insert_2_DbEntityTest() {
         insert_1_DbEntityTest();
         final DbEntityTest e = createDbEntityTestFromBaseValue(200);
         repository.insert(e);
-        assertEquals(2, e._id);
+        assertEquals(2, e.getId());
     }
 
     private void insert_4_DbEntityTest() {
         insert_2_DbEntityTest();
         final DbEntityTest e3 = createDbEntityTestFromBaseValue(300);
         repository.insert(e3);
-        assertEquals(3, e3._id);
+        assertEquals(3, e3.getId());
         final DbEntityTest e4 = createDbEntityTestFromBaseValue(400);
         repository.insert(e4);
-        assertEquals(4, e4._id);
+        assertEquals(4, e4.getId());
     }
 
     private void insert_1_DbEntityServerTest() {
         final DbEntityServerTest e = createDbEntityServerTestFromBaseValue(100);
         repository.insert(e);
-        assertEquals(1, e._id);
+        assertEquals(1, e.getId());
     }
 
     private void insert_2_DbEntityServerTest() {
         insert_1_DbEntityServerTest();
         final DbEntityServerTest e = createDbEntityServerTestFromBaseValue(200);
         repository.insert(e);
-        assertEquals(2, e._id);
+        assertEquals(2, e.getId());
     }
 
     private void insert_4_DbEntityServerTest() {
         insert_2_DbEntityServerTest();
         final DbEntityServerTest e3 = createDbEntityServerTestFromBaseValue(300);
         repository.insert(e3);
-        assertEquals(3, e3._id);
+        assertEquals(3, e3.getId());
         final DbEntityServerTest e4 = createDbEntityServerTestFromBaseValue(400);
         repository.insert(e4);
-        assertEquals(4, e4._id);
+        assertEquals(4, e4.getId());
     }
 }

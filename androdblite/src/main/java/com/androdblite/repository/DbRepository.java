@@ -9,7 +9,7 @@ import com.androdblite.domain.DbEntityServer;
 import java.util.List;
 
 /**
- * Created by tgirard on 26/06/15
+ * @author tgirard12
  */
 public interface DbRepository {
 
