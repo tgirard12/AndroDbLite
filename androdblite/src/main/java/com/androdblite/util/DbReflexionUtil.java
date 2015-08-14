@@ -2,12 +2,9 @@ package com.androdblite.util;
 
 import android.text.TextUtils;
 
-import com.androdblite.AndroDbLite;
 import com.androdblite.AndroDbLiteError;
 import com.androdblite.annotation.DbColumn;
 import com.androdblite.annotation.DbTable;
-
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -22,12 +19,10 @@ import java.util.List;
  */
 public class DbReflexionUtil {
 
-    static org.slf4j.Logger logger = LoggerFactory.getLogger(AndroDbLite.TAG);
-
     public static List<Field> getFields(Class<?> clazz) {
         final DbTable dbTable = (DbTable) clazz.getAnnotation(DbTable.class);
         if (dbTable == null)
-            throw new AndroDbLiteError("Class {} must be annotate with @DbEntity");
+            throw new AndroDbLiteError("Class " + clazz.getName() +" must be annotate with @DbTable");
 
         final ArrayList<Field> fields = new ArrayList<>();
         addDeclaredAndInheritedFields(clazz, fields);
