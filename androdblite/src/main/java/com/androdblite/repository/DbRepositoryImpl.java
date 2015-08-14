@@ -87,12 +87,12 @@ public class DbRepositoryImpl implements DbRepository {
 
     @Override
     public void deleteById(DbEntity entity) {
-        delete(entity.getClass(), idSelection, new String[]{String.valueOf(entity._id)});
+        delete(entity.getClass(), idSelection, new String[]{String.valueOf(entity.getId())});
     }
 
     @Override
     public void deleteByIdServer(DbEntityServer entity) {
-        delete(entity.getClass(), idServerSelection, new String[]{entity.idServer});
+        delete(entity.getClass(), idServerSelection, new String[]{entity.getIdServer()});
     }
 
     @Override
@@ -118,7 +118,7 @@ public class DbRepositoryImpl implements DbRepository {
                 delete(dbEntity.getClass(),
                         writableDatabase,
                         idSelection,
-                        new String[]{String.valueOf(dbEntity._id)});
+                        new String[]{String.valueOf(dbEntity.getId())});
             }
             writableDatabase.setTransactionSuccessful();
         } finally {
@@ -135,7 +135,7 @@ public class DbRepositoryImpl implements DbRepository {
                 delete(dbEntityServer.getClass(),
                         writableDatabase,
                         idServerSelection,
-                        new String[]{String.valueOf(dbEntityServer.idServer)});
+                        new String[]{String.valueOf(dbEntityServer.getIdServer())});
             }
             writableDatabase.setTransactionSuccessful();
         } finally {
@@ -251,7 +251,7 @@ public class DbRepositoryImpl implements DbRepository {
 
     @Override
     public void insert(DbEntity entity) {
-        entity._id = insert(entity, getWritableDatabase());
+        entity.setId(insert(entity, getWritableDatabase()));
     }
 
     @Override
@@ -269,7 +269,7 @@ public class DbRepositoryImpl implements DbRepository {
         try {
             writableDatabase.beginTransaction();
             for (DbEntity dbEntity : entities) {
-                dbEntity._id = insert(dbEntity, writableDatabase);
+                dbEntity.setId(insert(dbEntity, writableDatabase));
             }
             writableDatabase.setTransactionSuccessful();
         } finally {
@@ -294,25 +294,25 @@ public class DbRepositoryImpl implements DbRepository {
 
     @Override
     public void updateById(DbEntity entity) {
-        update(entity, getWritableDatabase(), idSelection, new String[]{String.valueOf(entity._id)});
+        update(entity, getWritableDatabase(), idSelection, new String[]{String.valueOf(entity.getId())});
     }
 
     @Override
     public void updateByIdServer(DbEntityServer entity) {
-        update(entity, getWritableDatabase(), idServerSelection, new String[]{entity.idServer});
+        update(entity, getWritableDatabase(), idServerSelection, new String[]{entity.getIdServer()});
     }
 
     @Override
     public void updateById(List<? extends DbEntity> entities) {
         for (DbEntity dbEntity : entities) {
-            update(dbEntity, getWritableDatabase(), idSelection, new String[]{String.valueOf(dbEntity._id)});
+            update(dbEntity, getWritableDatabase(), idSelection, new String[]{String.valueOf(dbEntity.getId())});
         }
     }
 
     @Override
     public void updateByIdServer(List<? extends DbEntityServer> entities) {
         for (DbEntityServer dbEntity : entities) {
-            update(dbEntity, getWritableDatabase(), idServerSelection, new String[]{dbEntity.idServer});
+            update(dbEntity, getWritableDatabase(), idServerSelection, new String[]{dbEntity.getIdServer()});
         }
     }
 
@@ -322,7 +322,7 @@ public class DbRepositoryImpl implements DbRepository {
         try {
             writableDatabase.beginTransaction();
             for (DbEntity dbEntity : entities) {
-                update(dbEntity, getWritableDatabase(), idSelection, new String[]{String.valueOf(dbEntity._id)});
+                update(dbEntity, getWritableDatabase(), idSelection, new String[]{String.valueOf(dbEntity.getId())});
             }
             writableDatabase.setTransactionSuccessful();
         } finally {
@@ -336,7 +336,7 @@ public class DbRepositoryImpl implements DbRepository {
         try {
             writableDatabase.beginTransaction();
             for (DbEntityServer dbEntity : entities) {
-                update(dbEntity, getWritableDatabase(), idServerSelection, new String[]{String.valueOf(dbEntity.idServer)});
+                update(dbEntity, getWritableDatabase(), idServerSelection, new String[]{String.valueOf(dbEntity.getIdServer())});
             }
             writableDatabase.setTransactionSuccessful();
         } finally {

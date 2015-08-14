@@ -5,7 +5,7 @@ import com.androdblite.annotation.DbColumn;
 import java.util.Date;
 
 /**
- * Created by tgirard on 26/06/15
+ * @author tgirard12
  */
 public abstract class DbEntity {
 
@@ -16,14 +16,46 @@ public abstract class DbEntity {
     }
 
     @DbColumn(insertUpdate = false)
-    public long _id;
+    long _id;
 
     @DbColumn(insertUpdate = false, select = false)
-    public boolean isDelete = false;
+    boolean isDelete = false;
 
     @DbColumn(name = DB.dateCreate)
-    public Date dateCreate;
+    Date dateCreate;
 
     @DbColumn(name = DB.dateModification)
-    public Date dateModification;
+    Date dateModification;
+
+    public long getId() {
+        return _id;
+    }
+
+    public void setId(long id) {
+        this._id = id;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(boolean isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public Date getDateCreate() {
+        return dateCreate;
+    }
+
+    public void setDateCreate(Date dateCreate) {
+        this.dateCreate = dateCreate;
+    }
+
+    public Date getDateModification() {
+        return dateModification;
+    }
+
+    public void setDateModification(Date dateModification) {
+        this.dateModification = dateModification;
+    }
 }

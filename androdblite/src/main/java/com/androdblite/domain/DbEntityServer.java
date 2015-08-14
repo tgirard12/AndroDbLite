@@ -16,12 +16,35 @@ public abstract class DbEntityServer extends DbEntity {
     }
 
     @DbColumn(name = DB.idServer)
-    public String idServer;
+    String idServer;
 
     @DbColumn(name = DB.isSent)
-    public Boolean isSent;
+    Boolean isSent;
 
     @DbColumn(name = DB.dateUtcSent)
-    public Date dateUtcSent;
+    Date dateUtcSent;
 
+    public String getIdServer() {
+        return idServer;
+    }
+
+    public void setIdServer(String idServer) {
+        this.idServer = idServer;
+    }
+
+    public Boolean getIsSent() {
+        return isSent;
+    }
+
+    public void setIsSent(Boolean isSent) {
+        this.isSent = isSent;
+    }
+
+    public Date getDateUtcSent() {
+        return dateUtcSent;
+    }
+
+    public void setDateUtcSent(Date dateUtcSent) {
+        this.dateUtcSent = dateUtcSent;
+    }
 }
