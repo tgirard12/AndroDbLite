@@ -6,11 +6,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by tgirard on 26/06/15
+ * Specify a Table. This annotation is required.
+ *
+ * @author tgirard12
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface DbTable {
 
+    /**
+     * The Database table name
+     */
     String name() default "";
 }
