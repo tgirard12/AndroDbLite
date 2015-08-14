@@ -2,10 +2,6 @@ package com.androdblite.util;
 
 import android.test.AndroidTestCase;
 
-import com.androdblite.AndroDbLite;
-
-import org.slf4j.LoggerFactory;
-
 /**
  * Created by tgirard on 30/06/15
  */
@@ -16,6 +12,6 @@ public class DbManifestUtilTest extends AndroidTestCase {
     }
 
     public void testEmptyDbName_return_AndroDbLite() {
-        assertEquals("Default DB name", "androDbLite.sqlite", DbManifestUtil.getDatabaseName(mContext));
+        assertEquals("Default DB name", "AndroDbLite.sqlite", DbManifestUtil.getDatabaseName(mContext));
     }
 }
