@@ -2,6 +2,9 @@
 
     <application android:allowBackup="true" android:label="@string/app_name">
 
+        <meta-data android:name="DB_NAME" android:value="AndroDbLite.sqlite"/>
+        <meta-data android:name="DB_VERSION" android:value="1"/>
+
     </application>
 
 </manifest>

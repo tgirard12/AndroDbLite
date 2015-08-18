@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import com.androdblite.AndroDbLite;
 import com.androdblite.AndroDbLiteException;
 import com.androdblite.DbHelper;
 import com.androdblite.domain.DbEntity;
@@ -18,7 +20,7 @@ import com.androdblite.util.DbManifestUtil;
 import com.androdblite.util.DbReflexionUtil;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -62,21 +64,39 @@ public class DbRepositoryImpl implements DbRepository {
     @Override
     public long count(Class clazz) {
         final String table = DbReflexionUtil.getTableName(clazz);
-        return DatabaseUtils.longForQuery(getReadableDatabase(), "select count(*) from " + table, null);
+        final String query = "select count(*) from " + table;
+        if (AndroDbLite.dActive()) {
+            Log.d(AndroDbLite.TAG, query);
+        }
+        return DatabaseUtils.longForQuery(getReadableDatabase(), query, null);
     }
 
     @Override
     public long count(Class clazz, String selection, String[] selectionArgs) {
         final String table = DbReflexionUtil.getTableName(clazz);
+
+        final StringBuilder str = new StringBuilder();
+        str.append("select count(*) from ").append(table);
+        if (selection != null)
+            str.append(" where ").append(selection);
+
+        if (AndroDbLite.dActive()) {
+            Log.d(AndroDbLite.TAG, str.toString());
+            Log.d(AndroDbLite.TAG, selection + Arrays.toString(selectionArgs));
+        }
         return DatabaseUtils.longForQuery(
                 getReadableDatabase(),
-                "select count(*) from " + table + " where " + selection,
+                str.toString(),
                 selectionArgs);
     }
 
     @Override
     public int delete(Class clazz, SQLiteDatabase database, String selection, String[] selectionArgs) {
         final String table = DbReflexionUtil.getTableName(clazz);
+        if (AndroDbLite.dActive()) {
+            Log.d(AndroDbLite.TAG, "delete from " + table + " where " + selection);
+            Log.d(AndroDbLite.TAG, selection + Arrays.toString(selectionArgs));
+        }
         return database.delete(table, selection, selectionArgs);
     }
 
@@ -187,8 +207,21 @@ public class DbRepositoryImpl implements DbRepository {
         final List<Field> fieldList = DbClassCache.getFields(clazz);
 
         Cursor c = null;
-        List<T> listResult = new ArrayList<>();
         try {
+            if (AndroDbLite.dActive()) {
+                final StringBuilder str = new StringBuilder("select " + Arrays.toString(columns) + " from " + table);
+                if (selection != null)
+                    str.append(" where ").append(selection);
+                if (groupBy != null)
+                    str.append(" group by ").append(groupBy);
+                if (orderBy != null)
+                    str.append(" order by ").append(orderBy);
+                if (limit != null)
+                    str.append(" limit ").append(limit);
+
+                Log.d(AndroDbLite.TAG, str.toString());
+                Log.d(AndroDbLite.TAG, selection + Arrays.toString(selectionArgs));
+            }
             c = getReadableDatabase().query(table, columns, selection, selectionArgs, groupBy, null, orderBy, limit);
             return DbCursorUtil.getEntitiesFromCursor(clazz, fieldList, c);
 
@@ -218,6 +251,20 @@ public class DbRepositoryImpl implements DbRepository {
         final String table = DbClassCache.getTableName(clazz);
         final String[] columns = DbClassCache.getColumnsSelect(clazz);
 
+        if (AndroDbLite.dActive()) {
+            final StringBuilder str = new StringBuilder("select " + Arrays.toString(columns) + " from " + table);
+            if (selection != null)
+                str.append(" where ").append(selection);
+            if (groupBy != null)
+                str.append(" group by ").append(groupBy);
+            if (orderBy != null)
+                str.append(" order by ").append(orderBy);
+            if (limit != null)
+                str.append(" limit ").append(limit);
+
+            Log.d(AndroDbLite.TAG, str.toString());
+            Log.d(AndroDbLite.TAG, selection + Arrays.toString(selectionArgs));
+        }
         return getReadableDatabase().query(table, columns, selection, selectionArgs, groupBy, null, orderBy, limit);
     }
 
@@ -241,6 +288,10 @@ public class DbRepositoryImpl implements DbRepository {
         final List<Field> fieldList = DbClassCache.getFields(entity.getClass());
         final ContentValues contentValues = DbContentValueUtil.getContentValues(fieldList, entity);
 
+        if (AndroDbLite.dActive()) {
+            Log.d(AndroDbLite.TAG, "insert into " + table +
+                    " values (" + contentValues + ")");
+        }
         return writableDb.insertOrThrow(table, null, contentValues);
     }
 
@@ -284,6 +335,12 @@ public class DbRepositoryImpl implements DbRepository {
         final List<Field> fieldList = DbClassCache.getFields(entity.getClass());
         final ContentValues contentValues = DbContentValueUtil.getContentValues(fieldList, entity);
 
+        if (AndroDbLite.dActive()) {
+            Log.d(AndroDbLite.TAG, "update " + table +
+                    " set " + contentValues +
+                    " where " + selection);
+            Log.d(AndroDbLite.TAG, selection + Arrays.toString(selectionArgs));
+        }
         return database.update(table, contentValues, selection, selectionArgs);
     }
 
