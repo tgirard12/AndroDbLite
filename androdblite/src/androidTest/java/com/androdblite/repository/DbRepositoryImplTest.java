@@ -169,7 +169,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         }
 
         assertEquals(3, repository.count(DbEntityTest.class));
-        assertEquals(1, repository.findAll(DbEntityTest.class).get(0).getId() );
+        assertEquals(1, repository.findAll(DbEntityTest.class).get(0).getId());
         assertEquals(2, repository.findAll(DbEntityTest.class).get(1).getId());
         assertEquals(3, repository.findAll(DbEntityTest.class).get(2).getId());
     }
@@ -584,6 +584,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
 
     //
 
+    @SuppressWarnings("deprecation")
     private void assertEntityTest(int base, EntityTest en) {
         assertEquals(++base, en.intValue);
         assertEquals(++base, en.integerNullableValue.intValue());
@@ -603,6 +604,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         assertEquals(null, en.stringTransient);
     }
 
+    @SuppressWarnings("deprecation")
     private void assertDbEntityTest(int base, DbEntityTest en) {
         assertEquals(++base, en.intValue);
         assertEquals(++base, en.integerNullableValue.intValue());
@@ -625,6 +627,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         assertEquals(new Date(2015, 6, 30), en.getDateModification());
     }
 
+    @SuppressWarnings("deprecation")
     private void assertDbEntityServerTest(int base, DbEntityServerTest en) {
         assertEquals(++base, en.intValue);
         assertEquals(++base, en.integerNullableValue.intValue());
@@ -653,6 +656,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         assertEquals(false, (boolean) en.getIsSent());
     }
 
+    @SuppressWarnings("deprecation")
     private EntityTest createEntityFromBaseValue(int base) {
         final EntityTest e = new EntityTest();
         e.intValue = ++base;
@@ -674,6 +678,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         return e;
     }
 
+    @SuppressWarnings("deprecation")
     private DbEntityTest createDbEntityTestFromBaseValue(int base) {
         final DbEntityTest e = new DbEntityTest();
         e.intValue = ++base;
@@ -698,6 +703,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         return e;
     }
 
+    @SuppressWarnings("deprecation")
     private DbEntityServerTest createDbEntityServerTestFromBaseValue(int base) {
         final DbEntityServerTest e = new DbEntityServerTest();
         e.intValue = ++base;
