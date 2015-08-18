@@ -1,7 +1,9 @@
 package com.androdblite.repository;
 
 import android.test.AndroidTestCase;
+import android.util.Log;
 
+import com.androdblite.AndroDbLite;
 import com.androdblite.domain.DbEntityServerTest;
 import com.androdblite.domain.DbEntityTest;
 import com.androdblite.domain.EntityTest;
@@ -30,6 +32,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
                 boolean delete = f.delete();
             }
         repository = new DbRepositoryImpl(mContext);
+        AndroDbLite.logLevel = Log.DEBUG;
     }
 
     @Override
