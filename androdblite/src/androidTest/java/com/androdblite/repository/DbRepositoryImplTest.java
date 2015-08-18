@@ -4,6 +4,7 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 
 import com.androdblite.AndroDbLite;
+import com.androdblite.AndroDbLiteError;
 import com.androdblite.domain.DbEntityServerTest;
 import com.androdblite.domain.DbEntityTest;
 import com.androdblite.domain.EntityTest;
@@ -29,7 +30,9 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         final File[] files = mContext.getDatabasePath(DB_NAME).getParentFile().listFiles();
         if (files != null)
             for (File f : files) {
-                boolean delete = f.delete();
+                final boolean delete = f.delete();
+                if (!delete)
+                    throw new AndroDbLiteError("Delete file : " + f.getName() + "failed");
             }
         repository = new DbRepositoryImpl(mContext);
         AndroDbLite.logLevel = Log.DEBUG;
