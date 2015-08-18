@@ -1,5 +1,6 @@
 package com.androdblite.repository;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
@@ -224,6 +225,68 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         assertEquals("113", repository.findAll(DbEntityServerTest.class).get(0).getIdServer());
         assertEquals("213", repository.findAll(DbEntityServerTest.class).get(1).getIdServer());
         assertEquals("313", repository.findAll(DbEntityServerTest.class).get(2).getIdServer());
+    }
+
+    public void testExist_EntityTest() {
+        insert_2_entityTest();
+
+        assertEquals(true, repository.exist(EntityTest.class, "myIntValue = ?", new String[]{"101"}));
+        assertEquals(true, repository.exist(EntityTest.class, "myIntValue = ?", new String[]{"201"}));
+        assertEquals(false, repository.exist(EntityTest.class, "myIntValue = ?", new String[]{"999"}));
+    }
+
+    public void testExist_DbEntityTest() {
+        final DbEntityTest e1 = createDbEntityTestFromBaseValue(100);
+        repository.insert(e1);
+        final DbEntityTest e2 = createDbEntityTestFromBaseValue(200);
+        repository.insert(e2);
+        final DbEntityTest e3 = createDbEntityTestFromBaseValue(300);
+
+        assertEquals(true, repository.existById(e1));
+        assertEquals(true, repository.existById(e2));
+        assertEquals(false, repository.existById(e3));
+    }
+
+    public void testExist_DbEntityServerTest() {
+        final DbEntityServerTest e1 = createDbEntityServerTestFromBaseValue(100);
+        repository.insert(e1);
+        final DbEntityServerTest e2 = createDbEntityServerTestFromBaseValue(200);
+        repository.insert(e2);
+        final DbEntityServerTest e3 = createDbEntityServerTestFromBaseValue(300);
+
+        assertEquals(true, repository.existByIdServer(e1));
+        assertEquals(true, repository.existByIdServer(e2));
+        assertEquals(false, repository.existByIdServer(e3));
+    }
+
+    public void testExist_DbEntityTestInTx() {
+
+        final DbEntityTest e1 = createDbEntityTestFromBaseValue(100);
+        final SQLiteDatabase database = repository.getWritableDatabase();
+        database.beginTransaction();
+        try {
+            repository.insert(e1);
+            assertEquals(true, repository.existById(e1, database));
+
+        } finally {
+            database.endTransaction();
+        }
+        assertEquals(false, repository.existById(e1));
+    }
+
+    public void testExist_DbEntityServerTestInTx() {
+
+        final DbEntityServerTest e1 = createDbEntityServerTestFromBaseValue(100);
+        final SQLiteDatabase database = repository.getWritableDatabase();
+        database.beginTransaction();
+        try {
+            repository.insert(e1);
+            assertEquals(true, repository.existByIdServer(e1, database));
+
+        } finally {
+            database.endTransaction();
+        }
+        assertEquals(false, repository.existById(e1));
     }
 
     public void testFindAll_EntityTest() {

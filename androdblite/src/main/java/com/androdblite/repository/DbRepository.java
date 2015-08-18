@@ -43,6 +43,20 @@ public interface DbRepository {
 
     void deleteByIdServerInTx(List<? extends DbEntityServer> entities);
 
+    // Exist
+
+    <T> boolean exist(Class<T> clazz, SQLiteDatabase database, String selection, String[] selectionArgs);
+
+    <T> boolean exist(Class<T> clazz, String selection, String[] selectionArgs);
+
+    boolean existById(DbEntity dbEntity);
+
+    boolean existById(DbEntity dbEntity, SQLiteDatabase database);
+
+    boolean existByIdServer(DbEntityServer dbEntityServer, SQLiteDatabase database);
+
+    boolean existByIdServer(DbEntityServer dbEntityServer);
+
     // Find
 
     <T> List<T> findAll(Class<T> clazz);

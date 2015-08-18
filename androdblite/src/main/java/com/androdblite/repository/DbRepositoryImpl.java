@@ -164,6 +164,55 @@ public class DbRepositoryImpl implements DbRepository {
     }
 
     @Override
+    public <T> boolean exist(Class<T> clazz, SQLiteDatabase database, String selection, String[] selectionArgs) {
+        final String table = DbReflexionUtil.getTableName(clazz);
+
+        final StringBuilder str = new StringBuilder();
+        str.append("select count(*) from ").append(table);
+        if (selection != null)
+            str.append(" where ").append(selection);
+        str.append(" limit 1");
+
+        if (AndroDbLite.dActive()) {
+            Log.d(AndroDbLite.TAG, str.toString());
+            Log.d(AndroDbLite.TAG, selection + Arrays.toString(selectionArgs));
+        }
+        return DatabaseUtils.longForQuery(
+                getReadableDatabase(),
+                str.toString(),
+                selectionArgs) > 0;
+    }
+
+    @Override
+    public <T> boolean exist(Class<T> clazz, String selection, String[] selectionArgs) {
+        return exist(clazz, getReadableDatabase(), selection, selectionArgs);
+    }
+
+    @Override
+    public boolean existById(DbEntity dbEntity) {
+        return exist(dbEntity.getClass(), getReadableDatabase(),
+                idSelection, new String[]{String.valueOf(dbEntity.getId())});
+    }
+
+    @Override
+    public boolean existById(DbEntity dbEntity, SQLiteDatabase database) {
+        return exist(dbEntity.getClass(), database,
+                idSelection, new String[]{String.valueOf(dbEntity.getId())});
+    }
+
+    @Override
+    public boolean existByIdServer(DbEntityServer dbEntityServer, SQLiteDatabase database) {
+        return exist(dbEntityServer.getClass(), database,
+                idServerSelection, new String[]{String.valueOf(dbEntityServer.getIdServer())});
+    }
+
+    @Override
+    public boolean existByIdServer(DbEntityServer dbEntityServer) {
+        return exist(dbEntityServer.getClass(), getReadableDatabase(),
+                idServerSelection, new String[]{String.valueOf(dbEntityServer.getIdServer())});
+    }
+
+    @Override
     public <T> List<T> findAll(Class<T> clazz) {
         return find(clazz, null, null, null, null, null);
     }
