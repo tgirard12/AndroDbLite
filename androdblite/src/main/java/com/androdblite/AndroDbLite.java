@@ -13,7 +13,7 @@ public class AndroDbLite {
     public static int logLevel = Log.INFO;
 
     public static void initSimple(Context context, String dbName, String DbVersion) {
-        DbHelper.instance = new DbHelper(context, "TOTO", null, -1);
+        DbOpenHelper.instance = new DbOpenHelper(context, "TOTO", null, -1);
     }
 
     public static boolean vActive() {

@@ -13,15 +13,15 @@ import java.io.InputStreamReader;
 /**
  * Created by tgirard on 26/06/15
  */
-public class DbHelper extends SQLiteOpenHelper {
+public class DbOpenHelper extends SQLiteOpenHelper {
 
-    protected static DbHelper instance;
+    protected static DbOpenHelper instance;
     public Context context;
 
     public static final String ASSET_FOLDER = "AndroDbLite/";
     public static final String ASSET_CREATE_ = "dbcreate.sql";
 
-    public DbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public DbOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         this.context = context.getApplicationContext();
     }

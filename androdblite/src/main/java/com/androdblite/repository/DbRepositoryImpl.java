@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.androdblite.AndroDbLite;
 import com.androdblite.AndroDbLiteException;
-import com.androdblite.DbHelper;
+import com.androdblite.DbOpenHelper;
 import com.androdblite.domain.DbEntity;
 import com.androdblite.domain.DbEntityServer;
 import com.androdblite.util.DbClassCache;
@@ -40,7 +40,7 @@ public class DbRepositoryImpl implements DbRepository {
      * @throws AndroDbLiteException
      */
     public DbRepositoryImpl(Context context) throws AndroDbLiteException {
-        sqLiteOpenHelper = new DbHelper(
+        sqLiteOpenHelper = new DbOpenHelper(
                 context,
                 DbManifestUtil.getDatabaseName(context),
                 null,
