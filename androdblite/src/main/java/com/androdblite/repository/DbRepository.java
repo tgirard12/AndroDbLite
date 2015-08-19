@@ -15,9 +15,7 @@ public interface DbRepository {
 
     // SqliteDatabase
 
-    SQLiteDatabase getReadableDatabase();
-
-    SQLiteDatabase getWritableDatabase();
+    SQLiteDatabase getDatabase();
 
     // Count
 

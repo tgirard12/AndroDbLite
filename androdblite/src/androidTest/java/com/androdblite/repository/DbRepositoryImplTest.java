@@ -262,7 +262,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
     public void testExist_DbEntityTestInTx() {
 
         final DbEntityTest e1 = createDbEntityTestFromBaseValue(100);
-        final SQLiteDatabase database = repository.getWritableDatabase();
+        final SQLiteDatabase database = repository.getDatabase();
         database.beginTransaction();
         try {
             repository.insert(e1);
@@ -277,7 +277,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
     public void testExist_DbEntityServerTestInTx() {
 
         final DbEntityServerTest e1 = createDbEntityServerTestFromBaseValue(100);
-        final SQLiteDatabase database = repository.getWritableDatabase();
+        final SQLiteDatabase database = repository.getDatabase();
         database.beginTransaction();
         try {
             repository.insert(e1);

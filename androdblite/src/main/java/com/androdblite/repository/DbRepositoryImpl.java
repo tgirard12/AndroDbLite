@@ -52,12 +52,7 @@ public class DbRepositoryImpl implements DbRepository {
     }
 
     @Override
-    public SQLiteDatabase getReadableDatabase() {
-        return sqLiteOpenHelper.getReadableDatabase();
-    }
-
-    @Override
-    public SQLiteDatabase getWritableDatabase() {
+    public SQLiteDatabase getDatabase() {
         return sqLiteOpenHelper.getWritableDatabase();
     }
 
@@ -68,7 +63,7 @@ public class DbRepositoryImpl implements DbRepository {
         if (AndroDbLite.dActive()) {
             Log.d(AndroDbLite.TAG, query);
         }
-        return DatabaseUtils.longForQuery(getReadableDatabase(), query, null);
+        return DatabaseUtils.longForQuery(getDatabase(), query, null);
     }
 
     @Override
@@ -85,7 +80,7 @@ public class DbRepositoryImpl implements DbRepository {
             Log.d(AndroDbLite.TAG, selection + Arrays.toString(selectionArgs));
         }
         return DatabaseUtils.longForQuery(
-                getReadableDatabase(),
+                getDatabase(),
                 str.toString(),
                 selectionArgs);
     }
@@ -102,7 +97,7 @@ public class DbRepositoryImpl implements DbRepository {
 
     @Override
     public int delete(Class clazz, String selection, String[] selectionArgs) {
-        return delete(clazz, getWritableDatabase(), selection, selectionArgs);
+        return delete(clazz, getDatabase(), selection, selectionArgs);
     }
 
     @Override
@@ -131,35 +126,35 @@ public class DbRepositoryImpl implements DbRepository {
 
     @Override
     public void deleteByIdInTx(List<? extends DbEntity> entities) {
-        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        final SQLiteDatabase database = getDatabase();
         try {
-            writableDatabase.beginTransaction();
+            database.beginTransaction();
             for (DbEntity dbEntity : entities) {
                 delete(dbEntity.getClass(),
-                        writableDatabase,
+                        database,
                         idSelection,
                         new String[]{String.valueOf(dbEntity.getId())});
             }
-            writableDatabase.setTransactionSuccessful();
+            database.setTransactionSuccessful();
         } finally {
-            writableDatabase.endTransaction();
+            database.endTransaction();
         }
     }
 
     @Override
     public void deleteByIdServerInTx(List<? extends DbEntityServer> entities) {
-        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        final SQLiteDatabase database = getDatabase();
         try {
-            writableDatabase.beginTransaction();
+            database.beginTransaction();
             for (DbEntityServer dbEntityServer : entities) {
                 delete(dbEntityServer.getClass(),
-                        writableDatabase,
+                        database,
                         idServerSelection,
                         new String[]{String.valueOf(dbEntityServer.getIdServer())});
             }
-            writableDatabase.setTransactionSuccessful();
+            database.setTransactionSuccessful();
         } finally {
-            writableDatabase.endTransaction();
+            database.endTransaction();
         }
     }
 
@@ -178,25 +173,25 @@ public class DbRepositoryImpl implements DbRepository {
             Log.d(AndroDbLite.TAG, selection + Arrays.toString(selectionArgs));
         }
         return DatabaseUtils.longForQuery(
-                getReadableDatabase(),
+                getDatabase(),
                 str.toString(),
                 selectionArgs) > 0;
     }
 
     @Override
     public <T> boolean exist(Class<T> clazz, String selection, String[] selectionArgs) {
-        return exist(clazz, getReadableDatabase(), selection, selectionArgs);
+        return exist(clazz, getDatabase(), selection, selectionArgs);
     }
 
     @Override
     public boolean existById(DbEntity dbEntity) {
-        return exist(dbEntity.getClass(), getReadableDatabase(),
+        return exist(dbEntity.getClass(), getDatabase(),
                 idSelection, new String[]{String.valueOf(dbEntity.getId())});
     }
 
     @Override
     public boolean existByIdServer(DbEntityServer dbEntityServer) {
-        return exist(dbEntityServer.getClass(), getReadableDatabase(),
+        return exist(dbEntityServer.getClass(), getDatabase(),
                 idServerSelection, new String[]{String.valueOf(dbEntityServer.getIdServer())});
     }
 
@@ -259,7 +254,7 @@ public class DbRepositoryImpl implements DbRepository {
                 Log.d(AndroDbLite.TAG, str.toString());
                 Log.d(AndroDbLite.TAG, selection + Arrays.toString(selectionArgs));
             }
-            c = getReadableDatabase().query(table, columns, selection, selectionArgs, groupBy, null, orderBy, limit);
+            c = getDatabase().query(table, columns, selection, selectionArgs, groupBy, null, orderBy, limit);
             return DbCursorUtil.getEntitiesFromCursor(clazz, fieldList, c);
 
         } finally {
@@ -302,7 +297,7 @@ public class DbRepositoryImpl implements DbRepository {
             Log.d(AndroDbLite.TAG, str.toString());
             Log.d(AndroDbLite.TAG, selection + Arrays.toString(selectionArgs));
         }
-        return getReadableDatabase().query(table, columns, selection, selectionArgs, groupBy, null, orderBy, limit);
+        return getDatabase().query(table, columns, selection, selectionArgs, groupBy, null, orderBy, limit);
     }
 
     @Override
@@ -319,7 +314,7 @@ public class DbRepositoryImpl implements DbRepository {
     }
 
     @Override
-    public long insert(Object entity, SQLiteDatabase writableDb) {
+    public long insert(Object entity, SQLiteDatabase database) {
 
         final String table = DbClassCache.getTableName(entity.getClass());
         final List<Field> fieldList = DbClassCache.getFields(entity.getClass());
@@ -329,17 +324,17 @@ public class DbRepositoryImpl implements DbRepository {
             Log.d(AndroDbLite.TAG, "insert into " + table +
                     " values (" + contentValues + ")");
         }
-        return writableDb.insertOrThrow(table, null, contentValues);
+        return database.insertOrThrow(table, null, contentValues);
     }
 
     @Override
     public long insert(Object entity) {
-        return insert(entity, getWritableDatabase());
+        return insert(entity, getDatabase());
     }
 
     @Override
     public void insert(DbEntity entity) {
-        entity.setId(insert(entity, getWritableDatabase()));
+        entity.setId(insert(entity, getDatabase()));
     }
 
     @Override
@@ -353,15 +348,15 @@ public class DbRepositoryImpl implements DbRepository {
     @Override
     public void insertInTx(List<? extends DbEntity> entities) {
 
-        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        final SQLiteDatabase database = getDatabase();
         try {
-            writableDatabase.beginTransaction();
+            database.beginTransaction();
             for (DbEntity dbEntity : entities) {
                 insert(dbEntity);
             }
-            writableDatabase.setTransactionSuccessful();
+            database.setTransactionSuccessful();
         } finally {
-            writableDatabase.endTransaction();
+            database.endTransaction();
         }
     }
 
@@ -397,29 +392,29 @@ public class DbRepositoryImpl implements DbRepository {
 
     @Override
     public void saveByIdInTx(List<? extends DbEntity> entities) {
-        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        final SQLiteDatabase database = getDatabase();
         try {
-            writableDatabase.beginTransaction();
+            database.beginTransaction();
             for (DbEntity dbEntity : entities) {
                 saveById(dbEntity);
             }
-            writableDatabase.setTransactionSuccessful();
+            database.setTransactionSuccessful();
         } finally {
-            writableDatabase.endTransaction();
+            database.endTransaction();
         }
     }
 
     @Override
     public void saveByIdServerInTx(List<? extends DbEntityServer> entities) {
-        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        final SQLiteDatabase database = getDatabase();
         try {
-            writableDatabase.beginTransaction();
+            database.beginTransaction();
             for (DbEntityServer dbEntityServer : entities) {
                 saveByIdServer(dbEntityServer);
             }
-            writableDatabase.setTransactionSuccessful();
+            database.setTransactionSuccessful();
         } finally {
-            writableDatabase.endTransaction();
+            database.endTransaction();
         }
     }
 
@@ -441,91 +436,58 @@ public class DbRepositoryImpl implements DbRepository {
 
     @Override
     public long update(Object entity, String selection, String[] selectionArgs) {
-        return update(entity, getWritableDatabase(), selection, selectionArgs);
+        return update(entity, getDatabase(), selection, selectionArgs);
     }
 
     @Override
     public void updateById(DbEntity entity) {
-        update(entity, getWritableDatabase(), idSelection, new String[]{String.valueOf(entity.getId())});
+        update(entity, getDatabase(), idSelection, new String[]{String.valueOf(entity.getId())});
     }
 
     @Override
     public void updateByIdServer(DbEntityServer entity) {
-        update(entity, getWritableDatabase(), idServerSelection, new String[]{entity.getIdServer()});
+        update(entity, getDatabase(), idServerSelection, new String[]{entity.getIdServer()});
     }
 
     @Override
     public void updateById(List<? extends DbEntity> entities) {
         for (DbEntity dbEntity : entities) {
-            update(dbEntity, getWritableDatabase(), idSelection, new String[]{String.valueOf(dbEntity.getId())});
+            update(dbEntity, getDatabase(), idSelection, new String[]{String.valueOf(dbEntity.getId())});
         }
     }
 
     @Override
     public void updateByIdServer(List<? extends DbEntityServer> entities) {
         for (DbEntityServer dbEntity : entities) {
-            update(dbEntity, getWritableDatabase(), idServerSelection, new String[]{dbEntity.getIdServer()});
+            update(dbEntity, getDatabase(), idServerSelection, new String[]{dbEntity.getIdServer()});
         }
     }
 
     @Override
     public void updateByIdInTx(List<? extends DbEntity> entities) {
-        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        final SQLiteDatabase database = getDatabase();
         try {
-            writableDatabase.beginTransaction();
+            database.beginTransaction();
             for (DbEntity dbEntity : entities) {
-                update(dbEntity, getWritableDatabase(), idSelection, new String[]{String.valueOf(dbEntity.getId())});
+                update(dbEntity, getDatabase(), idSelection, new String[]{String.valueOf(dbEntity.getId())});
             }
-            writableDatabase.setTransactionSuccessful();
+            database.setTransactionSuccessful();
         } finally {
-            writableDatabase.endTransaction();
+            database.endTransaction();
         }
     }
 
     @Override
     public void updateByIdServerInTx(List<? extends DbEntityServer> entities) {
-        final SQLiteDatabase writableDatabase = getWritableDatabase();
+        final SQLiteDatabase database = getDatabase();
         try {
-            writableDatabase.beginTransaction();
+            database.beginTransaction();
             for (DbEntityServer dbEntity : entities) {
-                update(dbEntity, getWritableDatabase(), idServerSelection, new String[]{String.valueOf(dbEntity.getIdServer())});
+                update(dbEntity, getDatabase(), idServerSelection, new String[]{String.valueOf(dbEntity.getIdServer())});
             }
-            writableDatabase.setTransactionSuccessful();
+            database.setTransactionSuccessful();
         } finally {
-            writableDatabase.endTransaction();
+            database.endTransaction();
         }
     }
-
-//    @Override
-//    public DbEntity saveById(DbEntity entity) {
-//        return null;
-//    }
-//
-//    @Override
-//    public DbEntity saveByIdServer(DbEntityServer entity) {
-//        return null;
-//    }
-//
-//
-//    @Override
-//    public List<DbEntity> saveById(List<? extends DbEntity> entity) {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<DbEntity> saveByIdServer(List<? extends DbEntityServer> entity) {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<DbEntity> saveByIdInTx(List<? extends DbEntity> entity) {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<DbEntity> saveByIdServerInTx(List<? extends DbEntityServer> entity) {
-//        return null;
-//    }
-
-
 }
