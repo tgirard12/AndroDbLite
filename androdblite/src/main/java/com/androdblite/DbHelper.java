@@ -15,8 +15,6 @@ import java.io.InputStreamReader;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-//    static Logger logger = LoggerFactory.getLogger(AndroDbLite.TAG);
-
     protected static DbHelper instance;
     public Context context;
 
@@ -31,17 +29,21 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
+            db.beginTransaction();
             if (AndroDbLite.iActive())
                 Log.i(AndroDbLite.TAG, "onCreate()");
 
             final String scriptFile = ASSET_FOLDER + ASSET_CREATE_;
             execSQL(db, scriptFile);
 
+            db.setTransactionSuccessful();
             if (AndroDbLite.iActive())
                 Log.i(AndroDbLite.TAG, "onCreate() > OK");
 
         } catch (Exception ex) {
             Log.e(AndroDbLite.TAG, "onCreate() > " + ex.getMessage(), ex);
+        } finally {
+            db.endTransaction();
         }
     }
 
@@ -58,8 +60,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 final String scriptFile = ASSET_FOLDER + v + ".sql";
                 execSQL(db, scriptFile);
             }
-            db.setTransactionSuccessful();
 
+            db.setTransactionSuccessful();
             if (AndroDbLite.iActive())
                 Log.i(AndroDbLite.TAG, "onUpgrade() > OK");
 
