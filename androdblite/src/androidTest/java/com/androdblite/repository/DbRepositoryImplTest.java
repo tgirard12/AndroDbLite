@@ -266,7 +266,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         database.beginTransaction();
         try {
             repository.insert(e1);
-            assertEquals(true, repository.existById(e1, database));
+            assertEquals(true, repository.existById(e1));
 
         } finally {
             database.endTransaction();
@@ -281,7 +281,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         database.beginTransaction();
         try {
             repository.insert(e1);
-            assertEquals(true, repository.existByIdServer(e1, database));
+            assertEquals(true, repository.existByIdServer(e1));
 
         } finally {
             database.endTransaction();
@@ -494,6 +494,186 @@ public class DbRepositoryImplTest extends AndroidTestCase {
         assertEquals(0, repository.findAll(DbEntityServerTest.class).size());
     }
 
+    public void testSaveById_DbEntityTest() {
+        insert_2_DbEntityTest();
+        final DbEntityTest e = createDbEntityTestFromBaseValue(300);
+
+        repository.saveById(e);
+        assertDbEntityTest(300, repository.findById(DbEntityTest.class, 3));
+
+        e.myString = "newValue";
+        repository.saveById(e);
+
+        assertEquals("newValue", repository.findById(DbEntityTest.class, 3).myString);
+    }
+
+    public void testSaveById_DbEntityServerTest() {
+        insert_2_DbEntityServerTest();
+        final DbEntityServerTest e = createDbEntityServerTestFromBaseValue(300);
+
+        repository.saveById(e);
+        assertDbEntityServerTest(300, repository.findById(DbEntityServerTest.class, 3));
+
+        e.myString = "newValue";
+        repository.saveById(e);
+
+        assertEquals("newValue", repository.findById(DbEntityServerTest.class, 3).myString);
+    }
+
+    public void testSaveByIdServer_DbEntityServerTest() {
+        insert_2_DbEntityServerTest();
+        final DbEntityServerTest e = createDbEntityServerTestFromBaseValue(300);
+
+        repository.saveByIdServer(e);
+        assertDbEntityServerTest(300, repository.findByIdServer(DbEntityServerTest.class, "313"));
+
+        e.myString = "newValue";
+        repository.saveByIdServer(e);
+
+        assertEquals("newValue", repository.findByIdServer(DbEntityServerTest.class, "313").myString);
+    }
+
+    public void testSaveListById_DbEntityTest() {
+
+        List<DbEntityTest> list = new ArrayList<>(4);
+        list.add(createDbEntityTestFromBaseValue(100));
+        list.add(createDbEntityTestFromBaseValue(200));
+        list.add(createDbEntityTestFromBaseValue(300));
+        list.add(createDbEntityTestFromBaseValue(400));
+
+        repository.saveById(list);
+
+        final List<DbEntityTest> listFind = repository.findAll(DbEntityTest.class);
+        assertEquals(4, listFind.size());
+        assertDbEntityTest(100, repository.findById(DbEntityTest.class, 1));
+        assertDbEntityTest(200, repository.findById(DbEntityTest.class, 2));
+        assertDbEntityTest(300, repository.findById(DbEntityTest.class, 3));
+        assertDbEntityTest(400, repository.findById(DbEntityTest.class, 4));
+
+        listFind.get(0).myString = "newValue1";
+        listFind.get(1).myString = "newValue2";
+        listFind.get(2).myString = "newValue3";
+        listFind.get(3).myString = "newValue4";
+
+        repository.saveById(listFind);
+
+        final List<DbEntityTest> listFind2 = repository.findAll(DbEntityTest.class);
+        assertEquals(4, listFind2.size());
+        assertEquals("newValue1", repository.findById(DbEntityTest.class, 1).myString);
+        assertEquals("newValue2", repository.findById(DbEntityTest.class, 2).myString);
+        assertEquals("newValue3", repository.findById(DbEntityTest.class, 3).myString);
+        assertEquals("newValue4", repository.findById(DbEntityTest.class, 4).myString);
+    }
+
+    public void testSaveListById_DbEntityServerTest() {
+
+        List<DbEntityServerTest> list = new ArrayList<>(4);
+        list.add(createDbEntityServerTestFromBaseValue(100));
+        list.add(createDbEntityServerTestFromBaseValue(200));
+        list.add(createDbEntityServerTestFromBaseValue(300));
+        list.add(createDbEntityServerTestFromBaseValue(400));
+
+        repository.saveById(list);
+
+        final List<DbEntityServerTest> listFind = repository.findAll(DbEntityServerTest.class);
+        assertEquals(4, listFind.size());
+        assertDbEntityServerTest(100, repository.findById(DbEntityServerTest.class, 1));
+        assertDbEntityServerTest(200, repository.findById(DbEntityServerTest.class, 2));
+        assertDbEntityServerTest(300, repository.findById(DbEntityServerTest.class, 3));
+        assertDbEntityServerTest(400, repository.findById(DbEntityServerTest.class, 4));
+
+        listFind.get(0).myString = "newValue1";
+        listFind.get(1).myString = "newValue2";
+        listFind.get(2).myString = "newValue3";
+        listFind.get(3).myString = "newValue4";
+
+        repository.saveById(listFind);
+
+        final List<DbEntityServerTest> listFind2 = repository.findAll(DbEntityServerTest.class);
+        assertEquals(4, listFind2.size());
+        assertEquals("newValue1", repository.findById(DbEntityServerTest.class, 1).myString);
+        assertEquals("newValue2", repository.findById(DbEntityServerTest.class, 2).myString);
+        assertEquals("newValue3", repository.findById(DbEntityServerTest.class, 3).myString);
+        assertEquals("newValue4", repository.findById(DbEntityServerTest.class, 4).myString);
+    }
+
+    public void testSaveListByIdServer_DbEntityServerTest() {
+
+        List<DbEntityServerTest> list = new ArrayList<>(4);
+        list.add(createDbEntityServerTestFromBaseValue(100));
+        list.add(createDbEntityServerTestFromBaseValue(200));
+        list.add(createDbEntityServerTestFromBaseValue(300));
+        list.add(createDbEntityServerTestFromBaseValue(400));
+
+        repository.saveByIdServer(list);
+
+        final List<DbEntityServerTest> listFind = repository.findAll(DbEntityServerTest.class);
+        assertEquals(4, listFind.size());
+        assertDbEntityServerTest(100, repository.findByIdServer(DbEntityServerTest.class, "113"));
+        assertDbEntityServerTest(200, repository.findByIdServer(DbEntityServerTest.class, "213"));
+        assertDbEntityServerTest(300, repository.findByIdServer(DbEntityServerTest.class, "313"));
+        assertDbEntityServerTest(400, repository.findByIdServer(DbEntityServerTest.class, "413"));
+
+        listFind.get(0).myString = "newValue1";
+        listFind.get(1).myString = "newValue2";
+        listFind.get(2).myString = "newValue3";
+        listFind.get(3).myString = "newValue4";
+
+        repository.saveById(listFind);
+
+        final List<DbEntityServerTest> listFind2 = repository.findAll(DbEntityServerTest.class);
+        assertEquals(4, listFind2.size());
+        assertEquals("newValue1", repository.findByIdServer(DbEntityServerTest.class, "113").myString);
+        assertEquals("newValue2", repository.findByIdServer(DbEntityServerTest.class, "213").myString);
+        assertEquals("newValue3", repository.findByIdServer(DbEntityServerTest.class, "313").myString);
+        assertEquals("newValue4", repository.findByIdServer(DbEntityServerTest.class, "413").myString);
+    }
+
+    public void testSaveListByIdInTx_DbEntityTest() {
+
+        List<DbEntityTest> list = new ArrayList<>(4);
+        list.add(createDbEntityTestFromBaseValue(100));
+        list.add(createDbEntityTestFromBaseValue(200));
+        list.add(null);
+        list.add(createDbEntityTestFromBaseValue(400));
+
+        try {
+            repository.saveByIdInTx(list);
+        } catch (Exception ignored) {
+        }
+        assertEquals(0, repository.findAll(DbEntityTest.class).size());
+    }
+
+    public void testSaveListByIdInTx_DbEntityServerTest() {
+
+        List<DbEntityServerTest> list = new ArrayList<>(4);
+        list.add(createDbEntityServerTestFromBaseValue(100));
+        list.add(createDbEntityServerTestFromBaseValue(200));
+        list.add(null);
+        list.add(createDbEntityServerTestFromBaseValue(400));
+
+        try {
+            repository.saveByIdInTx(list);
+        } catch (Exception ignored) {
+        }
+        assertEquals(0, repository.findAll(DbEntityServerTest.class).size());
+    }
+
+    public void testSaveListByIdServerInTx_DbEntityServerTest() {
+
+        List<DbEntityServerTest> list = new ArrayList<>(4);
+        list.add(createDbEntityServerTestFromBaseValue(100));
+        list.add(createDbEntityServerTestFromBaseValue(200));
+        list.add(null);
+        list.add(createDbEntityServerTestFromBaseValue(400));
+
+        try {
+            repository.saveByIdServerInTx(list);
+        } catch (Exception ignored) {
+        }
+        assertEquals(0, repository.findAll(DbEntityServerTest.class).size());
+    }
+
     public void testUpdate_Entity() {
         insert_2_entityTest();
         final EntityTest e = createEntityFromBaseValue(300);
@@ -675,6 +855,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
 
     @SuppressWarnings("deprecation")
     private void assertDbEntityTest(int base, DbEntityTest en) {
+        assertEquals(base / 100, en.getId());
         assertEquals(++base, en.intValue);
         assertEquals(++base, en.integerNullableValue.intValue());
         assertEquals(++base, en.longValue);
@@ -698,6 +879,7 @@ public class DbRepositoryImplTest extends AndroidTestCase {
 
     @SuppressWarnings("deprecation")
     private void assertDbEntityServerTest(int base, DbEntityServerTest en) {
+        assertEquals(base / 100, en.getId());
         assertEquals(++base, en.intValue);
         assertEquals(++base, en.integerNullableValue.intValue());
         assertEquals(++base, en.longValue);

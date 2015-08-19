@@ -51,10 +51,6 @@ public interface DbRepository {
 
     boolean existById(DbEntity dbEntity);
 
-    boolean existById(DbEntity dbEntity, SQLiteDatabase database);
-
-    boolean existByIdServer(DbEntityServer dbEntityServer, SQLiteDatabase database);
-
     boolean existByIdServer(DbEntityServer dbEntityServer);
 
     // Find
@@ -99,7 +95,21 @@ public interface DbRepository {
 
     void insertInTx(List<? extends DbEntity> entities);
 
-    //
+    // Save
+
+    void saveById(DbEntity entity);
+
+    void saveByIdServer(DbEntityServer entity);
+
+    void saveById(List<? extends DbEntity> entities);
+
+    void saveByIdServer(List<? extends DbEntityServer> entities);
+
+    void saveByIdInTx(List<? extends DbEntity> entities);
+
+    void saveByIdServerInTx(List<? extends DbEntityServer> entities);
+
+    // Update
 
     long update(Object entity, SQLiteDatabase database, String selection, String[] selectionArgs);
 
@@ -117,18 +127,5 @@ public interface DbRepository {
 
     void updateByIdServerInTx(List<? extends DbEntityServer> entities);
 
-    //
-
-//    DbEntity saveById(DbEntity entity);
-//
-//    DbEntity saveByIdServer(DbEntityServer entity);
-//
-//    List<DbEntity> saveById(List<? extends DbEntity> entity);
-//
-//    List<DbEntity> saveByIdServer(List<? extends DbEntityServer> entity);
-//
-//    List<DbEntity> saveByIdInTx(List<? extends DbEntity> entity);
-//
-//    List<DbEntity> saveByIdServerInTx(List<? extends DbEntityServer> entity);
 
 }
