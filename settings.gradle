@@ -1,1 +1,1 @@
-include ':app', ':androdblite'
+include ':app', ':androdblite', ':androdblite-compiler', ':androdblite-api'

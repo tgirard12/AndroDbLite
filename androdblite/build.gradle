@@ -1,32 +1,14 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
-    }
-}
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
 
-def versionHumanName = '0.2.0'
-def versionCodeInt = 200
-group = "com.androdblite"
-version = versionHumanName
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+
+    compileSdkVersion rootProject.ext.targetSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 23
-
-        versionCode versionCodeInt
-        versionName versionHumanName
+        minSdkVersion rootProject.ext.targetSdkVersion
     }
     buildTypes {
         release {
@@ -34,99 +16,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions {
-        disable 'InvalidPackage'
+//    lintOptions {
+//        disable 'InvalidPackage'
+//    }
+
+    dependencies {
+        compile project(':androdblite-api')
+//        compile deps.supportAnnotations
+
+        testCompile deps.junit
     }
-}
-
-dependencies {
-
-}
-
-// Bintray upload
-def siteUrl = 'https://github.com/tgirard12/AndroDbLite'
-def gitUrl = 'https://github.com/tgirard12/AndroDbLite.git'
-
-bintray {
-    user = bintray_user
-    key = bintray_api_key
-
-    configurations = ['archives'] //When uploading configuration files
-
-    pkg {
-        repo = 'android'
-        name = project.name
-        desc = 'Simple Sqlite database library for Android'
-        userOrg = 'tgirard12'
-        websiteUrl = siteUrl
-        issueTrackerUrl = 'https://github.com/tgirard12/AndroDbLite/issues'
-        vcsUrl = gitUrl
-        licenses = ['Apache-2.0']
-        labels = ['aar', 'android', 'sqlite']
-        publicDownloadNumbers = true
-        desc = 'Simple Sqlite database library for Android'
-
-        version {
-            name = versionHumanName
-            vcsTag = project.name + "-v" + versionHumanName
-        }
-    }
-}
-
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-                name project.name
-                version versionHumanName
-                url siteUrl
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'tgirard12'
-                        name 'Thomas Girard'
-                        email 'thomas.girard12@gmail.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
-
-// build a jar with source files
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    failOnError false
-    source = android.sourceSets.main.java.sourceFiles
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-// build a jar with javadoc
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
-task findConventions << {
-    println project.getConvention()
 }

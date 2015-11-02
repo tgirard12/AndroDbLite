@@ -1,0 +1,86 @@
+
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+bintray {
+    user = bintray_user
+    key = bintray_api_key
+
+    configurations = ['archives'] //When uploading configuration files
+
+    pkg {
+        repo = PKG_REPO
+        name = NAME
+        desc = PKG_DESCRIPTION
+        userOrg = PKG_DEVELOPER
+        websiteUrl = SITE_URL
+        issueTrackerUrl = PKG_ISSUE_TRACKER
+        vcsUrl = GIT_URL
+        licenses = PKG_LICENSE
+        labels = PKG_LABELS
+        publicDownloadNumbers = true
+
+        version {
+            name = VERSION_NAME
+            vcsTag = NAME + "-v" + VERSION_NAME
+        }
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name project.name
+                version versionHumanName
+                url siteUrl
+                licenses {
+                    license {
+                        name PKG_POM_LICENSE
+                        url PKG_POM_LICENSE_URL
+                    }
+                }
+                developers {
+                    developer {
+                        id PKG_DEVELOPER
+                        name PKG_DEVELOPER_NAME
+                        email PKG_DEVELOPER_EMAIL
+                    }
+                }
+                scm {
+                    connection GIT_URL
+                    developerConnection GIT_URL
+                    url SITE_URL
+                }
+            }
+        }
+    }
+}
+
+// build a jar with source files
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+// build a jar with javadoc
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+task findConventions << {
+    println project.getConvention()
+}

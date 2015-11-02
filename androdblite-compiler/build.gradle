@@ -1,0 +1,14 @@
+apply plugin: 'java'
+
+dependencies {
+    compile project(':androdblite-api')
+    compile deps.autoservice
+    compile deps.autocommon
+    compile deps.javapoet
+
+    compile deps.commonsLang
+
+    testCompile deps.junit
+    testCompile deps.compiletesting
+    testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+}
