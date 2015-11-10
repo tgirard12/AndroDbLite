@@ -1,4 +1,4 @@
-package com.androdblite.annotation;
+package com.androdblite;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,12 +10,12 @@ import java.lang.annotation.Target;
  *
  * @author tgirard12
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface DbTable {
 
     /**
      * The Database table name
      */
-    String name() default "";
+    String value() default "";
 }

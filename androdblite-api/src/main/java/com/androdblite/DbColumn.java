@@ -1,4 +1,4 @@
-package com.androdblite.annotation;
+package com.androdblite;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,14 +10,14 @@ import java.lang.annotation.Target;
  *
  * @author tgirard12
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface DbColumn {
 
     /**
-     * Name of the columnin the database
+     * Column name
      */
-    String name() default "";
+    String value() default "";
 
     /**
      * Field must be insert or update. Primary Key for exemple is FALSE
