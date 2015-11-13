@@ -3,8 +3,8 @@ package com.androdblite.util;
 import android.text.TextUtils;
 
 import com.androdblite.AndroDbLiteError;
-import com.androdblite.annotation.DbColumn;
-import com.androdblite.annotation.DbTable;
+import com.androdblite.DbColumn;
+import com.androdblite.DbTable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -65,17 +65,17 @@ public class DbReflexionUtil {
         if (dbTable == null)
             throw new AndroDbLiteError("Class {} must be annotate with @DbEntity");
 
-        if (TextUtils.isEmpty(dbTable.name()))
+        if (TextUtils.isEmpty(dbTable.value()))
             return clazz.getSimpleName();
         else
-            return dbTable.name();
+            return dbTable.value();
     }
 
     public static String getColumnName(Field f, DbColumn column) {
-        if (TextUtils.isEmpty(column.name()))
+        if (TextUtils.isEmpty(column.value()))
             return f.getName();
         else
-            return column.name();
+            return column.value();
     }
 
     public static String getStringValue(Field f, Object entity) {

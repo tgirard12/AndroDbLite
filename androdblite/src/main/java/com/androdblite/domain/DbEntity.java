@@ -1,6 +1,6 @@
 package com.androdblite.domain;
 
-import com.androdblite.annotation.DbColumn;
+import com.androdblite.DbColumn;
 
 import java.util.Date;
 
@@ -21,10 +21,10 @@ public abstract class DbEntity {
     @DbColumn(insertUpdate = false, select = false)
     boolean isDelete = false;
 
-    @DbColumn(name = DB.dateCreate)
+    @DbColumn(DB.dateCreate)
     Date dateCreate;
 
-    @DbColumn(name = DB.dateModification)
+    @DbColumn(DB.dateModification)
     Date dateModification;
 
     public long getId() {

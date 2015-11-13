@@ -1,6 +1,6 @@
 package com.androdblite.domain;
 
-import com.androdblite.annotation.DbColumn;
+import com.androdblite.DbColumn;
 
 import java.util.Date;
 
@@ -15,13 +15,13 @@ public abstract class DbEntityServer extends DbEntity {
         public static final String dateUtcSent = "dateUtcSent";
     }
 
-    @DbColumn(name = DB.idServer)
+    @DbColumn(DB.idServer)
     String idServer;
 
-    @DbColumn(name = DB.isSent)
+    @DbColumn(DB.isSent)
     Boolean isSent;
 
-    @DbColumn(name = DB.dateUtcSent)
+    @DbColumn(DB.dateUtcSent)
     Date dateUtcSent;
 
     public String getIdServer() {

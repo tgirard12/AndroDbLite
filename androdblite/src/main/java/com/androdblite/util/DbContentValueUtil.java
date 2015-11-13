@@ -2,7 +2,7 @@ package com.androdblite.util;
 
 import android.content.ContentValues;
 
-import com.androdblite.annotation.DbColumn;
+import com.androdblite.DbColumn;
 
 import java.lang.reflect.Field;
 import java.util.Date;

@@ -1,54 +1,54 @@
 package com.androdblite.domain;
 
-import com.androdblite.annotation.DbColumn;
-import com.androdblite.annotation.DbTable;
+import com.androdblite.DbColumn;
+import com.androdblite.DbTable;
 
 import java.util.Date;
 
 /**
  * Created by tgirard on 30/06/15
  */
-@DbTable(name = "myCustomTable")
+@DbTable("myCustomTable")
 public class EntityTest {
 
-    @DbColumn(name = "myIntValue")
+    @DbColumn("myIntValue")
     public int intValue;
-    @DbColumn(name = "myIntegerNullableValue")
+    @DbColumn("myIntegerNullableValue")
     public Integer integerNullableValue;
 
-    @DbColumn(name = "myLongValue")
+    @DbColumn("myLongValue")
     public long longValue;
-    @DbColumn(name = "myLongNullableValue")
+    @DbColumn("myLongNullableValue")
     public Long longNullableValue;
 
-    @DbColumn(name = "myFloatValue")
+    @DbColumn("myFloatValue")
     public float floatValue;
-    @DbColumn(name = "myFloatNullableValue")
+    @DbColumn("myFloatNullableValue")
     public Float floatNullableValue;
 
-    @DbColumn(name = "myDoubleValue")
+    @DbColumn("myDoubleValue")
     public double doubleValue;
-    @DbColumn(name = "myDoubleNullableValue")
+    @DbColumn("myDoubleNullableValue")
     public Double doubleNullableValue;
 
-    @DbColumn(name = "myBooleanValue")
+    @DbColumn("myBooleanValue")
     public boolean booleanValue;
-    @DbColumn(name = "myBooleanNullableValue")
+    @DbColumn("myBooleanNullableValue")
     public Boolean booleanNullableValue;
 
-    @DbColumn(name = "myDate")
+    @DbColumn("myDate")
     public Date date;
 
-    @DbColumn(name = "myDateNullable")
+    @DbColumn("myDateNullable")
     public Date dateNullable;
 
-    @DbColumn(name = "myString")
+    @DbColumn("myString")
     public String string;
 
-    @DbColumn(name = "myStringNoSelect", select = false)
+    @DbColumn(value = "myStringNoSelect", select = false)
     public String stringNoSelect;
 
-    @DbColumn(name = "myStringNoInsert", insertUpdate = false)
+    @DbColumn(value = "myStringNoInsert", insertUpdate = false)
     public String stringNoInsert;
 
     public String stringTransient;

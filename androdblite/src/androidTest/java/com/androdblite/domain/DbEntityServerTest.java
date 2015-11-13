@@ -1,7 +1,7 @@
 package com.androdblite.domain;
 
-import com.androdblite.annotation.DbColumn;
-import com.androdblite.annotation.DbTable;
+import com.androdblite.DbColumn;
+import com.androdblite.DbTable;
 
 import java.util.Date;
 
@@ -45,7 +45,7 @@ public class DbEntityServerTest extends DbEntityServer {
     @DbColumn
     public String myString;
 
-    @DbColumn(name = "myMyCustomColumnName")
+    @DbColumn("myMyCustomColumnName")
     public String string;
 
     @DbColumn(select = false)

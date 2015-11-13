@@ -3,7 +3,7 @@ package com.androdblite.util;
 import android.database.Cursor;
 
 import com.androdblite.AndroDbLiteError;
-import com.androdblite.annotation.DbColumn;
+import com.androdblite.DbColumn;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
