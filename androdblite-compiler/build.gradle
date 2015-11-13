@@ -1,7 +1,13 @@
 apply plugin: 'java'
 
+configurations {
+    provided
+    compile.extendsFrom provided
+}
+
 dependencies {
     compile project(':androdblite-api')
+
     compile deps.autoservice
     compile deps.autocommon
     compile deps.javapoet
